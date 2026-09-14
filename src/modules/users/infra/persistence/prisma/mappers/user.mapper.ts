@@ -1,6 +1,7 @@
 import { User as PrismaUser } from '@prisma/client';
 import { User } from '../../../../domain/entities/user.entity';
 import { Email } from '../../../../domain/value-objects/email.vo';
+import { Role } from '../../../../domain/value-objects/role.vo';
 
 /**
  * Traduz entre o modelo do Prisma (persistência) e a entidade de domínio.
@@ -13,6 +14,7 @@ export class UserMapper {
         name: raw.name,
         email: Email.create(raw.email),
         password: raw.password,
+        role: Role.create(raw.role),
         createdAt: raw.createdAt,
         updatedAt: raw.updatedAt,
       },
@@ -26,6 +28,7 @@ export class UserMapper {
       name: user.name,
       email: user.email.toString(),
       password: user.password,
+      role: user.role.toString(),
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };

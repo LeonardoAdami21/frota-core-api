@@ -5,6 +5,7 @@ import { ListMaintenancesUseCase } from '../application/use-cases/list-maintenan
 import { DeleteMaintenanceUseCase } from '../application/use-cases/delete-maintenance.use-case';
 import { MaintenanceRepository } from '../domain/repositories/maintenance.repository';
 import { PrismaMaintenanceRepository } from './persistence/prisma/prisma-maintenance.repository';
+import { MaintenancesService } from '../application/services/maintenances.service';
 import { VehiclesModule } from '@modules/vehicles/infra/vehicles.module';
 
 @Module({
@@ -14,7 +15,9 @@ import { VehiclesModule } from '@modules/vehicles/infra/vehicles.module';
     CreateMaintenanceUseCase,
     ListMaintenancesUseCase,
     DeleteMaintenanceUseCase,
+    MaintenancesService,
     { provide: MaintenanceRepository, useClass: PrismaMaintenanceRepository },
   ],
+  exports: [MaintenancesService],
 })
 export class MaintenancesModule {}
