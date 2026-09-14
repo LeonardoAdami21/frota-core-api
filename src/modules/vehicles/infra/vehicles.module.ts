@@ -7,6 +7,7 @@ import { UpdateVehicleUseCase } from '../application/use-cases/update-vehicle.us
 import { DeleteVehicleUseCase } from '../application/use-cases/delete-vehicle.use-case';
 import { VehicleRepository } from '../domain/repositories/vehicle.repository';
 import { PrismaVehicleRepository } from './persistence/prisma/prisma-vehicle.repository';
+import { VehiclesService } from '../application/services/vehicles.service';
 
 @Module({
   controllers: [VehiclesController],
@@ -16,7 +17,10 @@ import { PrismaVehicleRepository } from './persistence/prisma/prisma-vehicle.rep
     GetVehicleUseCase,
     UpdateVehicleUseCase,
     DeleteVehicleUseCase,
+    VehiclesService,
     { provide: VehicleRepository, useClass: PrismaVehicleRepository },
   ],
+  // Apenas o serviço é público. O VehicleRepository continua interno ao módulo.
+  exports: [VehiclesService],
 })
 export class VehiclesModule {}

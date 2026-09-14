@@ -12,24 +12,31 @@ model User {
   name      String
   email     String   @unique
   password  String
+  role      String   @default("OPERADOR")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
+
+  refreshTokens RefreshToken[]
 
   @@map("users")
 }
 
 model Vehicle {
-  id           String        @id @default(uuid())
-  plate        String        @unique
-  model        String
-  brand        String
-  year         Int
-  odometer     Int
-  status       String        @default("ATIVO")
-  driver       String?
-  createdAt    DateTime      @default(now()) @map("created_at")
-  updatedAt    DateTime      @updatedAt @map("updated_at")
+  id        String   @id @default(uuid())
+  plate     String   @unique
+  model     String
+  brand     String
+  year      Int
+  odometer  Int
+  status    String   @default("ATIVO")
+  driver    String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
   maintenances Maintenance[]
+  fuelings     Fueling[]
+  expenses     Expense[]
+  documents    Document[]
 
   @@map("vehicles")
 }
@@ -48,4 +55,66 @@ model Maintenance {
 
   @@index([vehicleId])
   @@map("maintenances")
+}
+
+model Fueling {
+  id        String   @id @default(uuid())
+  vehicleId String   @map("vehicle_id")
+  liters    Decimal  @db.Decimal(10, 3)
+  totalCost Decimal  @db.Decimal(10, 2) @map("total_cost")
+  odometer  Int
+  fueledAt  DateTime @map("fueled_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId])
+  @@map("fuelings")
+}
+
+model Expense {
+  id          String   @id @default(uuid())
+  vehicleId   String   @map("vehicle_id")
+  category    String
+  description String
+  amount      Decimal  @db.Decimal(10, 2)
+  spentAt     DateTime @map("spent_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId])
+  @@map("expenses")
+}
+
+model Document {
+  id        String   @id @default(uuid())
+  vehicleId String   @map("vehicle_id")
+  type      String
+  dueDate   DateTime @map("due_date")
+  amount    Decimal  @db.Decimal(10, 2)
+  status    String   @default("PENDENTE")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  vehicle Vehicle @relation(fields: [vehicleId], references: [id], onDelete: Cascade)
+
+  @@index([vehicleId])
+  @@map("documents")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String   @map("user_id")
+  expiresAt DateTime @map("expires_at")
+  revokedAt DateTime? @map("revoked_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_tokens")
 }
