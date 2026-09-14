@@ -22,4 +22,9 @@ export class VehiclesService {
   async ensureExists(id: string): Promise<void> {
     await this.findById(id);
   }
+
+  /** Lista todos os veículos. Usado por leituras cross-module (ex.: dashboard). */
+  findAll(): Promise<Vehicle[]> {
+    return this.vehicles.findAll();
+  }
 }

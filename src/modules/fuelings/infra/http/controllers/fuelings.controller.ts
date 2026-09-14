@@ -3,6 +3,8 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@modules/auth/infra/guards/jwt-auth.guard';
+import { RolesGuard } from '@modules/auth/infra/guards/roles.guard';
+import { Roles } from '@modules/auth/infra/decorators/roles.decorator';
 import { CreateFuelingUseCase } from '../../../application/use-cases/create-fueling.use-case';
 import { ListFuelingsUseCase } from '../../../application/use-cases/list-fuelings.use-case';
 import { DeleteFuelingUseCase } from '../../../application/use-cases/delete-fueling.use-case';
@@ -11,7 +13,7 @@ import { FuelingPresenter } from '../presenters/fueling.presenter';
 
 @ApiTags('fuelings')
 @ApiBearerAuth('access-token')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('vehicles/:vehicleId/fuelings')
 export class FuelingsController {
   constructor(
@@ -20,6 +22,7 @@ export class FuelingsController {
     private readonly deleteFueling: DeleteFuelingUseCase,
   ) {}
 
+  @Roles('ADMIN')
   @Post()
   @ApiOperation({ summary: 'Registra um abastecimento para o veículo' })
   async create(@Param('vehicleId') vehicleId: string, @Body() dto: CreateFuelingDto) {
@@ -34,6 +37,7 @@ export class FuelingsController {
     return items.map(FuelingPresenter.toHTTP);
   }
 
+  @Roles('ADMIN')
   @Delete(':id')
   @HttpCode(204)
   @ApiOperation({ summary: 'Remove um abastecimento' })

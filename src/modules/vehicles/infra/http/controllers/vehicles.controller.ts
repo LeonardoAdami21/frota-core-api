@@ -1,16 +1,10 @@
 import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  Param,
-  Patch,
-  Post,
-  UseGuards,
+  Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@modules/auth/infra/guards/jwt-auth.guard';
+import { RolesGuard } from '@modules/auth/infra/guards/roles.guard';
+import { Roles } from '@modules/auth/infra/decorators/roles.decorator';
 import { CreateVehicleUseCase } from '../../../application/use-cases/create-vehicle.use-case';
 import { ListVehiclesUseCase } from '../../../application/use-cases/list-vehicles.use-case';
 import { GetVehicleUseCase } from '../../../application/use-cases/get-vehicle.use-case';
@@ -22,7 +16,7 @@ import { VehiclePresenter } from '../presenters/vehicle.presenter';
 
 @ApiTags('vehicles')
 @ApiBearerAuth('access-token')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('vehicles')
 export class VehiclesController {
   constructor(
@@ -33,6 +27,7 @@ export class VehiclesController {
     private readonly deleteVehicle: DeleteVehicleUseCase,
   ) {}
 
+  @Roles('ADMIN')
   @Post()
   @ApiOperation({ summary: 'Cadastra um veículo' })
   async create(@Body() dto: CreateVehicleDto) {
@@ -54,6 +49,7 @@ export class VehiclesController {
     return VehiclePresenter.toHTTP(vehicle);
   }
 
+  @Roles('ADMIN')
   @Patch(':id')
   @ApiOperation({ summary: 'Atualiza um veículo' })
   async update(@Param('id') id: string, @Body() dto: UpdateVehicleDto) {
@@ -61,6 +57,7 @@ export class VehiclesController {
     return VehiclePresenter.toHTTP(vehicle);
   }
 
+  @Roles('ADMIN')
   @Delete(':id')
   @HttpCode(204)
   @ApiOperation({ summary: 'Remove um veículo' })

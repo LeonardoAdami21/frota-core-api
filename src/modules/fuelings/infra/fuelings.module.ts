@@ -5,6 +5,7 @@ import { ListFuelingsUseCase } from '../application/use-cases/list-fuelings.use-
 import { DeleteFuelingUseCase } from '../application/use-cases/delete-fueling.use-case';
 import { FuelingRepository } from '../domain/repositories/fueling.repository';
 import { PrismaFuelingRepository } from './persistence/prisma/prisma-fueling.repository';
+import { FuelingsService } from '../application/services/fuelings.service';
 import { VehiclesModule } from '@modules/vehicles/infra/vehicles.module';
 
 @Module({
@@ -14,7 +15,9 @@ import { VehiclesModule } from '@modules/vehicles/infra/vehicles.module';
     CreateFuelingUseCase,
     ListFuelingsUseCase,
     DeleteFuelingUseCase,
+    FuelingsService,
     { provide: FuelingRepository, useClass: PrismaFuelingRepository },
   ],
+  exports: [FuelingsService],
 })
 export class FuelingsModule {}
