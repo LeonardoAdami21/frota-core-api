@@ -7,6 +7,6 @@
   "files.autoSave": "afterDelay", // optional but recommended
   "vs-code-prettier-eslint.prettierLast": false,
   "[prisma]": {
-    "editor.defaultFormatter": "Prisma.prisma"
+    "editor.defaultFormatter": "Prisma.prisma-insider"
   } // set as "true" to run 'prettier' last not first
 }

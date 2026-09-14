@@ -8,12 +8,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import {
-  ApiBearerAuth,
-  ApiOperation,
-  ApiParam,
-  ApiTags,
-} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@modules/auth/infra/guards/jwt-auth.guard';
 import { CreateMaintenanceUseCase } from '../../../application/use-cases/create-maintenance.use-case';
 import { ListMaintenancesUseCase } from '../../../application/use-cases/list-maintenances.use-case';
@@ -45,7 +40,6 @@ export class MaintenancesController {
 
   @Get()
   @ApiOperation({ summary: 'Lista as manutenções do veículo' })
-  @ApiParam({ name: 'vehicleId', type: String, required: true })
   async list(@Param('vehicleId') vehicleId: string) {
     const items = await this.listMaintenances.execute(vehicleId);
     return items.map(MaintenancePresenter.toHTTP);

@@ -1,11 +1,10 @@
-import { IsInt, IsOptional, IsString, Min, MinLength } from 'class-validator';
+import { OmitType, PartialType } from '@nestjs/swagger';
+import { CreateVehicleDto } from './create-vehicle.dto';
 
-/** Todos os campos opcionais: atualização parcial. */
-export class UpdateVehicleDto {
-  @IsOptional() @IsString() @MinLength(2) model?: string;
-  @IsOptional() @IsString() @MinLength(2) brand?: string;
-  @IsOptional() @IsInt() @Min(1950) year?: number;
-  @IsOptional() @IsInt() @Min(0) odometer?: number;
-  @IsOptional() @IsString() status?: string;
-  @IsOptional() @IsString() driver?: string;
-}
+/**
+ * Atualização parcial: reaproveita as propriedades (e os @ApiProperty)
+ * de CreateVehicleDto, tornando todas opcionais. A placa não é editável.
+ */
+export class UpdateVehicleDto extends PartialType(
+  OmitType(CreateVehicleDto, ['plate'] as const),
+) {}

@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { MaintenancesController } from './http/controllers/maintenances.controller';
 import { CreateMaintenanceUseCase } from '../application/use-cases/create-maintenance.use-case';
 import { ListMaintenancesUseCase } from '../application/use-cases/list-maintenances.use-case';
@@ -8,7 +8,7 @@ import { PrismaMaintenanceRepository } from './persistence/prisma/prisma-mainten
 import { VehiclesModule } from '@modules/vehicles/infra/vehicles.module';
 
 @Module({
-  imports: [VehiclesModule], // precisa do VehicleRepository exportado
+  imports: [forwardRef(() => VehiclesModule)], // consome o VehiclesService exportado
   controllers: [MaintenancesController],
   providers: [
     CreateMaintenanceUseCase,

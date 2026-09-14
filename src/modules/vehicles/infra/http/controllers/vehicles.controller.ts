@@ -1,6 +1,15 @@
 import {
-  Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, UseGuards,
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  Patch,
+  Post,
+  UseGuards,
 } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@modules/auth/infra/guards/jwt-auth.guard';
 import { CreateVehicleUseCase } from '../../../application/use-cases/create-vehicle.use-case';
 import { ListVehiclesUseCase } from '../../../application/use-cases/list-vehicles.use-case';
@@ -11,7 +20,8 @@ import { CreateVehicleDto } from '../../../application/dtos/create-vehicle.dto';
 import { UpdateVehicleDto } from '../../../application/dtos/update-vehicle.dto';
 import { VehiclePresenter } from '../presenters/vehicle.presenter';
 
-/** Todas as rotas de veículos exigem JWT. */
+@ApiTags('vehicles')
+@ApiBearerAuth('access-token')
 @UseGuards(JwtAuthGuard)
 @Controller('vehicles')
 export class VehiclesController {
@@ -24,24 +34,28 @@ export class VehiclesController {
   ) {}
 
   @Post()
+  @ApiOperation({ summary: 'Cadastra um veículo' })
   async create(@Body() dto: CreateVehicleDto) {
     const vehicle = await this.createVehicle.execute(dto);
     return VehiclePresenter.toHTTP(vehicle);
   }
 
   @Get()
+  @ApiOperation({ summary: 'Lista todos os veículos' })
   async findAll() {
     const vehicles = await this.listVehicles.execute();
     return vehicles.map(VehiclePresenter.toHTTP);
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Busca um veículo por id' })
   async findOne(@Param('id') id: string) {
     const vehicle = await this.getVehicle.execute(id);
     return VehiclePresenter.toHTTP(vehicle);
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Atualiza um veículo' })
   async update(@Param('id') id: string, @Body() dto: UpdateVehicleDto) {
     const vehicle = await this.updateVehicle.execute({ id, ...dto });
     return VehiclePresenter.toHTTP(vehicle);
@@ -49,6 +63,7 @@ export class VehiclesController {
 
   @Delete(':id')
   @HttpCode(204)
+  @ApiOperation({ summary: 'Remove um veículo' })
   async remove(@Param('id') id: string) {
     await this.deleteVehicle.execute(id);
   }

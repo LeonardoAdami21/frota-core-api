@@ -5,14 +5,16 @@ import { UsersModule } from '@modules/users/infra/users.module';
 import { AuthModule } from '@modules/auth/infra/auth.module';
 import { VehiclesModule } from '@modules/vehicles/infra/vehicles.module';
 import { MaintenancesModule } from '@modules/maintenances/infra/maintenances.module';
+import { FuelingsModule } from './modules/fuelings/infra/fuelings.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
     UsersModule,
-    VehiclesModule,
     MaintenancesModule,
+    VehiclesModule,
+    FuelingsModule,
     AuthModule,
   ],
 })

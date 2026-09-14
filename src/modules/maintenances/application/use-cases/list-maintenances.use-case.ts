@@ -1,18 +1,17 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { MaintenanceRepository } from '../../domain/repositories/maintenance.repository';
 import { Maintenance } from '../../domain/entities/maintenance.entity';
-import { VehicleRepository } from '@modules/vehicles/domain/repositories/vehicle.repository';
+import { VehiclesService } from '@modules/vehicles/application/services/vehicles.service';
 
 @Injectable()
 export class ListMaintenancesUseCase {
   constructor(
     private readonly maintenances: MaintenanceRepository,
-    private readonly vehicles: VehicleRepository,
+    private readonly vehicles: VehiclesService,
   ) {}
 
   async execute(vehicleId: string): Promise<Maintenance[]> {
-    const vehicle = await this.vehicles.findById(vehicleId);
-    if (!vehicle) throw new NotFoundException('Veículo não encontrado');
+    await this.vehicles.ensureExists(vehicleId);
     return this.maintenances.findByVehicle(vehicleId);
   }
 }
