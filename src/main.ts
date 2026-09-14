@@ -31,6 +31,9 @@ async function bootstrap() {
     .addTag('auth', 'Registro e login')
     .addTag('users', 'Usuários')
     .addTag('vehicles', 'Veículos da frota')
+    .addTag('expenses', 'Despesas avulsas por veículo')
+    .addTag('documents', 'Documentos por veículo')
+    .addTag('dashboard', 'Painel de controle')
     .addTag('maintenances', 'Manutenções por veículo')
     .addTag('fuelings', 'Abastecimentos por veículo')
     .build();
